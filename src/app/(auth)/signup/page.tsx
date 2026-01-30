@@ -58,7 +58,7 @@ export default function SignupPage() {
       const { confirmPassword, name, ...rest } = values;
       const apiValues = { ...rest, nombre: name };
 
-      const response = await fetch("https://api.solanoafk.com/api/auth/register", {
+      const response = await fetch("/api/auth/register", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(apiValues),

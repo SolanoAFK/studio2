@@ -2,6 +2,14 @@ import type {NextConfig} from 'next';
 
 const nextConfig: NextConfig = {
   /* config options here */
+  async rewrites() {
+    return [
+      {
+        source: '/api/:path*',
+        destination: 'https://api.solanoafk.com/api/:path*',
+      },
+    ];
+  },
   output: 'standalone',
   typescript: {
     ignoreBuildErrors: true,
