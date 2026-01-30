@@ -55,8 +55,7 @@ export default function SignupPage() {
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     try {
-      const { confirmPassword, name, ...rest } = values;
-      const apiValues = { ...rest, nombre: name };
+      const { confirmPassword, ...apiValues } = values;
 
       const response = await fetch("/api/auth/register", {
         method: "POST",
@@ -64,11 +63,19 @@ export default function SignupPage() {
         body: JSON.stringify(apiValues),
       });
 
-      const data = await response.json();
-
+      const responseBody = await response.text();
       if (!response.ok) {
-        throw new Error(data.message || "Registration failed");
+        let errorMessage = "Registration failed";
+        try {
+            const errorJson = JSON.parse(responseBody);
+            errorMessage = errorJson.message || responseBody;
+        } catch (e) {
+            errorMessage = responseBody || `Request failed with status ${response.status}`;
+        }
+        throw new Error(errorMessage);
       }
+      
+      const data = JSON.parse(responseBody);
       
       toast({
         title: "Success",

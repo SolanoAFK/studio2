@@ -61,11 +61,19 @@ export default function LoginPage() {
         body: JSON.stringify(values),
       });
 
-      const data = await response.json();
-
+      const responseBody = await response.text();
       if (!response.ok) {
-        throw new Error(data.message || "Login failed");
+        let errorMessage = "Login failed";
+        try {
+            const errorJson = JSON.parse(responseBody);
+            errorMessage = errorJson.message || responseBody;
+        } catch (e) {
+            errorMessage = responseBody || `Request failed with status ${response.status}`;
+        }
+        throw new Error(errorMessage);
       }
+
+      const data = JSON.parse(responseBody);
       
       login({ user: data.user, token: data.token });
       toast({
