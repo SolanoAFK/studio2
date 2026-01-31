@@ -17,7 +17,7 @@ export default function DashboardPage() {
           <p className="mt-4">Here's some information we have for you:</p>
           <ul className="mt-2 list-disc list-inside text-muted-foreground">
             <li><strong>Username:</strong> {user?.username}</li>
-            <li><strong>Email:</strong> {user?.email}</li>
+            <li><strong>Email:</strong> {user?.correo}</li>
           </ul>
         </CardContent>
       </Card>

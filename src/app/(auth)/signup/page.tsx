@@ -28,9 +28,9 @@ import { AuthFlowLogo } from "@/components/auth-flow-logo";
 import { Loader2 } from "lucide-react";
 
 const formSchema = z.object({
-  name: z.string().min(1, { message: "Name is required." }),
+  nombre: z.string().min(1, { message: "Name is required." }),
   username: z.string().min(3, { message: "Username must be at least 3 characters." }),
-  email: z.string().email({ message: "Please enter a valid email." }),
+  correo: z.string().email({ message: "Please enter a valid email." }),
   password: z.string().min(6, { message: "Password must be at least 6 characters." }),
   confirmPassword: z.string()
 }).refine(data => data.password === data.confirmPassword, {
@@ -45,9 +45,9 @@ export default function SignupPage() {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      name: "",
+      nombre: "",
       username: "",
-      email: "",
+      correo: "",
       password: "",
       confirmPassword: ""
     },
@@ -105,7 +105,7 @@ export default function SignupPage() {
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-3">
              <FormField
               control={form.control}
-              name="name"
+              name="nombre"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Full Name</FormLabel>
@@ -131,7 +131,7 @@ export default function SignupPage() {
             />
              <FormField
               control={form.control}
-              name="email"
+              name="correo"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Email</FormLabel>

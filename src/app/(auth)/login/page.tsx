@@ -76,7 +76,7 @@ export default function LoginPage() {
 
       const data = JSON.parse(responseBody);
       
-      login({ user: data.user, token: data.token });
+      login({ user: data.usuario, token: data.token });
       toast({
         title: "Success",
         description: "Logged in successfully.",
