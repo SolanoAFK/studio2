@@ -1,12 +1,11 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { useAuth } from "@/contexts/auth-context";
 import { useToast } from "@/hooks/use-toast";
 import { Company, columns } from "./columns";
 import { DataTable } from "@/components/data-table";
-import { Button } from "@/components/ui/button";
-import { PlusCircle } from "lucide-react";
+import { NewCompanyForm } from "./new-company-form";
 
 async function getCompanies(token: string): Promise<Company[]> {
   const response = await fetch('/api/empresas', {
@@ -15,7 +14,12 @@ async function getCompanies(token: string): Promise<Company[]> {
 
   if (!response.ok) {
     const errorData = await response.text();
-    throw new Error(`Failed to fetch companies: ${errorData}`);
+    try {
+      const errorJson = JSON.parse(errorData);
+      throw new Error(errorJson.message || `Failed to fetch companies: ${errorData}`);
+    } catch {
+      throw new Error(`Failed to fetch companies: ${errorData}`);
+    }
   }
 
   const data = await response.json();
@@ -27,19 +31,24 @@ export default function CompaniesPage() {
   const { token } = useAuth();
   const { toast } = useToast();
 
-  useEffect(() => {
+  const fetchCompanies = useCallback(() => {
     if (token) {
       getCompanies(token)
         .then(setData)
         .catch(error => {
           toast({
             variant: "destructive",
-            title: "Error",
+            title: "Error al cargar empresas",
             description: error.message,
           });
+          setData([]); // Clear data on error
         });
     }
   }, [token, toast]);
+
+  useEffect(() => {
+    fetchCompanies();
+  }, [fetchCompanies]);
 
   return (
     <div className="space-y-6">
@@ -48,10 +57,7 @@ export default function CompaniesPage() {
           <h1 className="text-3xl font-bold tracking-tight">Gestión de Empresas</h1>
           <p className="text-muted-foreground">Administra las empresas registradas en el portal.</p>
         </div>
-        <Button>
-          <PlusCircle className="mr-2 h-4 w-4" />
-          Nueva Empresa
-        </Button>
+        <NewCompanyForm onCompanyCreated={fetchCompanies} />
       </div>
       <DataTable 
         columns={columns} 
