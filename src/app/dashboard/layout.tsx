@@ -80,7 +80,7 @@ export default function DashboardLayout({
 
   return (
     <SidebarProvider>
-      <Sidebar>
+      <Sidebar collapsible="icon">
         <SidebarHeader>
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
