@@ -1,12 +1,11 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { useAuth } from "@/contexts/auth-context";
 import { useToast } from "@/hooks/use-toast";
 import { User, columns } from "./columns";
 import { DataTable } from "@/components/data-table";
-import { Button } from "@/components/ui/button";
-import { PlusCircle } from "lucide-react";
+import { NewUserForm } from "./new-user-form";
 
 async function getUsers(token: string): Promise<User[]> {
   const response = await fetch('/api/usuarios', {
@@ -15,7 +14,12 @@ async function getUsers(token: string): Promise<User[]> {
 
   if (!response.ok) {
     const errorData = await response.text();
-    throw new Error(`Failed to fetch users: ${errorData}`);
+    try {
+      const errorJson = JSON.parse(errorData);
+      throw new Error(errorJson.message || `Failed to fetch users: ${errorData}`);
+    } catch {
+      throw new Error(`Failed to fetch users: ${errorData}`);
+    }
   }
 
   const data = await response.json();
@@ -27,19 +31,24 @@ export default function UsersPage() {
   const { token } = useAuth();
   const { toast } = useToast();
 
-  useEffect(() => {
+  const fetchUsers = useCallback(() => {
     if (token) {
       getUsers(token)
         .then(setData)
         .catch(error => {
           toast({
             variant: "destructive",
-            title: "Error",
+            title: "Error al cargar usuarios",
             description: error.message,
           });
+          setData([]); // Clear data on error
         });
     }
   }, [token, toast]);
+
+  useEffect(() => {
+    fetchUsers();
+  }, [fetchUsers]);
 
   return (
     <div className="space-y-6">
@@ -50,10 +59,7 @@ export default function UsersPage() {
             Administra los usuarios y sus roles.
           </p>
         </div>
-        <Button>
-          <PlusCircle className="mr-2 h-4 w-4" />
-          Nuevo Usuario
-        </Button>
+        <NewUserForm onUserCreated={fetchUsers} />
       </div>
       <DataTable 
         columns={columns} 
