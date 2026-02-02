@@ -82,9 +82,14 @@ export default function DashboardLayout({
     <SidebarProvider>
       <Sidebar>
         <SidebarHeader>
-          <div className="flex items-center gap-2">
-            <AuthFlowLogo className="h-7 w-7" />
-            <span className="text-lg font-semibold">Civil Portal</span>
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <AuthFlowLogo className="h-7 w-7" />
+              <span className="text-lg font-semibold group-data-[collapsible=icon]:hidden">
+                Civil Portal
+              </span>
+            </div>
+            <SidebarTrigger className="hidden md:flex" />
           </div>
         </SidebarHeader>
         <SidebarContent>
@@ -97,7 +102,9 @@ export default function DashboardLayout({
                     tooltip={item.label}
                   >
                     <item.icon />
-                    <span>{item.label}</span>
+                    <span className="group-data-[collapsible=icon]:hidden">
+                      {item.label}
+                    </span>
                   </SidebarMenuButton>
                 </Link>
               </SidebarMenuItem>
@@ -107,7 +114,10 @@ export default function DashboardLayout({
         <SidebarFooter>
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button variant="ghost" className="w-full justify-start gap-2 px-2">
+              <Button
+                variant="ghost"
+                className="w-full justify-start group-data-[collapsible=icon]:justify-center group-data-[collapsible=icon]:px-0 gap-2 px-2"
+              >
                 <Avatar className="h-8 w-8">
                   <AvatarImage
                     src={`https://avatar.vercel.sh/${user?.username}.png`}
@@ -116,8 +126,12 @@ export default function DashboardLayout({
                   <AvatarFallback>{getInitials(user?.nombre)}</AvatarFallback>
                 </Avatar>
                 <div className="text-left group-data-[collapsible=icon]:hidden">
-                  <p className="font-medium text-sm leading-tight">{user?.nombre}</p>
-                  <p className="text-xs text-muted-foreground">{user?.username}</p>
+                  <p className="font-medium text-sm leading-tight">
+                    {user?.nombre}
+                  </p>
+                  <p className="text-xs text-muted-foreground">
+                    {user?.username}
+                  </p>
                 </div>
               </Button>
             </DropdownMenuTrigger>
@@ -131,7 +145,10 @@ export default function DashboardLayout({
                 </DropdownMenuItem>
               </Link>
               <DropdownMenuSeparator />
-              <DropdownMenuItem className="cursor-pointer" onClick={handleLogout}>
+              <DropdownMenuItem
+                className="cursor-pointer"
+                onClick={handleLogout}
+              >
                 <LogOut className="mr-2 h-4 w-4" />
                 Cerrar Sesión
               </DropdownMenuItem>
@@ -141,9 +158,9 @@ export default function DashboardLayout({
       </Sidebar>
       <SidebarInset>
         <header className="sticky top-0 flex h-14 items-center gap-4 border-b bg-background/80 backdrop-blur-sm px-4 md:px-6 z-10">
-          <SidebarTrigger className="md:hidden"/>
+          <SidebarTrigger className="md:hidden" />
           <div className="flex-1">
-             {/* Future breadcrumbs or page title can go here */}
+            {/* Future breadcrumbs or page title can go here */}
           </div>
         </header>
         <main className="flex-1 p-4 md:p-6 lg:p-8">{children}</main>
