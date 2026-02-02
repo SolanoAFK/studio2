@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { useAuth } from "@/contexts/auth-context";
 import { useToast } from "@/hooks/use-toast";
 import { User, columns } from "./columns";
-import { DataTable } from "./data-table";
+import { DataTable } from "@/components/data-table";
 import { Button } from "@/components/ui/button";
 import { PlusCircle } from "lucide-react";
 
@@ -55,7 +55,12 @@ export default function UsersPage() {
           Nuevo Usuario
         </Button>
       </div>
-      <DataTable columns={columns} data={data} />
+      <DataTable 
+        columns={columns} 
+        data={data}
+        filterColumnId="correo"
+        filterPlaceholder="Filtrar por correo..."
+      />
     </div>
   );
 }

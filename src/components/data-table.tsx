@@ -35,11 +35,15 @@ import { ChevronDown } from "lucide-react"
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[]
   data: TData[]
+  filterColumnId: string
+  filterPlaceholder: string
 }
 
 export function DataTable<TData, TValue>({
   columns,
   data,
+  filterColumnId,
+  filterPlaceholder,
 }: DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = React.useState<SortingState>([])
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([])
@@ -69,12 +73,12 @@ export function DataTable<TData, TValue>({
     <div className="w-full">
         <div className="flex items-center py-4">
             <Input
-            placeholder="Filtrar por correo..."
-            value={(table.getColumn("correo")?.getFilterValue() as string) ?? ""}
-            onChange={(event) =>
-                table.getColumn("correo")?.setFilterValue(event.target.value)
-            }
-            className="max-w-sm"
+              placeholder={filterPlaceholder}
+              value={(table.getColumn(filterColumnId)?.getFilterValue() as string) ?? ""}
+              onChange={(event) =>
+                  table.getColumn(filterColumnId)?.setFilterValue(event.target.value)
+              }
+              className="max-w-sm"
             />
              <DropdownMenu>
                 <DropdownMenuTrigger asChild>
